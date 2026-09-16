@@ -107,7 +107,7 @@ begin
    begin
       Initialize_Mystery (Jackpot, 1000.0, 2000.0, 0.10);
       Play_Mystery (Jackpot, 100.0, Hit);
-      Check ("7.1 System registers no hit", Hit = False);
+      Check ("7.1 System registers no hit", not Hit);
       Check ("7.2 Pool increments correctly (1010.00)", Current_Value (Jackpot) = 1010.00);
       Check ("7.3 Base untouched", Base_Value (Jackpot) = 1000.00);
    end;
@@ -120,7 +120,7 @@ begin
    begin
       Initialize_Mystery (Jackpot, 1000.0, 1050.0, 0.50);
       Play_Mystery (Jackpot, 100.0, Hit); -- Adds 50.0, triggering hit
-      Check ("8.1 System successfully signals hit", Hit = True);
+      Check ("8.1 System successfully signals hit", Hit);
       Check ("8.2 Jackpot auto-resets to base (1000.00)", Current_Value (Jackpot) = 1000.00);
       Check ("8.3 Base value confirmed intact", Base_Value (Jackpot) = 1000.00);
    end;
@@ -155,7 +155,7 @@ begin
    Put_Line (ASCII.LF & "TEST 11 — Network Play (Local Area Batch Simulation)");
    declare
       Jackpot : Network_Jackpot;
-      Bets    : Bet_Array := [10.0, 20.0, 30.0]; -- Sum = 60.0
+      Bets    : constant Bet_Array := [10.0, 20.0, 30.0]; -- Sum = 60.0
    begin
       Initialize_Network (Jackpot, Local_Area, 1000.0, 0.10);
       Play_Network (Jackpot, Bets); -- 10% of 60.0 = 6.0
@@ -168,7 +168,7 @@ begin
    Put_Line (ASCII.LF & "TEST 12 — Network Play (Wide Area Deductions)");
    declare
       Jackpot : Network_Jackpot;
-      Bets    : Bet_Array := [100.0, 200.0]; -- Sum = 300.0
+      Bets    : constant Bet_Array := [100.0, 200.0]; -- Sum = 300.0
    begin
       -- 10% increment, 4% fee -> 6% Effective rate
       Initialize_Network (Jackpot, Wide_Area, 1000.0, 0.10, 0.04);
@@ -186,7 +186,7 @@ begin
    begin
       Initialize_Standalone (Jackpot, 1000.0, 0.10);
       Play_With_Qualification (Jackpot, 3.0, 3.0, Qual);
-      Check ("13.1 Qualifier recognized bet met constraint", Qual = True);
+      Check ("13.1 Qualifier recognized bet met constraint", Qual);
       Check ("13.2 Bet contributed to pool (+0.30)", Current_Value (Jackpot) = 1000.30);
       Check ("13.3 Base constant intact", Base_Value (Jackpot) = 1000.00);
    end;
@@ -199,7 +199,7 @@ begin
    begin
       Initialize_Standalone (Jackpot, 1000.0, 0.10);
       Play_With_Qualification (Jackpot, 2.0, 3.0, Qual);
-      Check ("14.1 Qualifier rejected under-funded bet", Qual = False);
+      Check ("14.1 Qualifier rejected under-funded bet", not Qual);
       Check ("14.2 Under-funded bet STILL contributed to pool", Current_Value (Jackpot) = 1000.20);
       Check ("14.3 Base constant intact", Base_Value (Jackpot) = 1000.00);
    end;
